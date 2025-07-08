@@ -23,10 +23,10 @@ with DAG(
     # --- Tarea 1: Leer información desde GCS ---
     def read_from_gcs_callable(**kwargs):
         ti = kwargs['ti']
-        bucket_name = 'airflow-info/data'  # ¡Cambia esto por el nombre de tu bucket!
-        source_blob_name = 'input_data.txt'  # ¡Cambia esto por el nombre de tu archivo de entrada!
-
+        bucket_name = 'airflow-info'  # Updated to 'airflow-info'
+        source_blob_name = 'data/input_data.txt'  # Updated to include 'data/' directory
         gcs_hook = GCSHook()
+        # The download method can write to a file or return content
         file_content = gcs_hook.download(
             bucket_name=bucket_name,
             object_name=source_blob_name,
@@ -64,8 +64,8 @@ with DAG(
     def write_to_gcs_callable(**kwargs):
         ti = kwargs['ti']
         processed_data = ti.xcom_pull(key='processed_data', task_ids='process_the_data')
-        bucket_name = 'your-gcs-bucket-name'  # ¡Cambia esto por el nombre de tu bucket!
-        destination_blob_name = 'output_data.txt'  # Nombre del archivo de salida en GCS
+        bucket_name = 'airflow-info'  # Updated to 'airflow-info'
+        destination_blob_name = 'output_data.txt'  # Name of the output file in GCS root
 
         gcs_hook = GCSHook()
 
@@ -73,6 +73,7 @@ with DAG(
         with open('/tmp/processed_output.txt', 'w') as f:
             f.write(processed_data)
 
+        # The upload method can upload a local file
         gcs_hook.upload(
             bucket_name=bucket_name,
             object_name=destination_blob_name,
