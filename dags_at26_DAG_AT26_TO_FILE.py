@@ -132,7 +132,7 @@ def ATS_TH_AT26_TOTXT(**kwargs):
     kwargs['ti'].log.info(f"Se obtuvieron {len(registros)} registros.")
 
     # Definir la ruta del archivo de salida en GCS
-    gcs_bucket = 'us-central1-composer-bancar-794f4b44-bucket'
+    gcs_bucket = 'airflow-info'
     gcs_object_path = f"data/AT26/SALIDAS/{FileAT}{FileCodSupervisado}{FechaFile}.txt"
     
     temp_dir = tempfile.mkdtemp() # Crea un directorio temporal
