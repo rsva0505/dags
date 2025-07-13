@@ -33,15 +33,6 @@ with DAG(
             object_name=source_blob_name,
             filename='/tmp/downloaded_data.txt'  # Descarga a un archivo temporal
         )
-        with open('/tmp/downloaded_data.txt', 'r') as f:
-            data = f.read()
-            logging.info(f"Contenido leído de GCS:\n{data}")
-            ti.xcom_push(key='raw_data', value=data) # XCom push is kept in case the data is needed by a subsequent, as yet undefined, task.
-
-    read_gcs_task = PythonOperator(
-        task_id='read_data_from_gcs',
-        python_callable=read_from_gcs_callable,
-        provide_context=True,
     )
 
     # No further tasks are defined as this DAG is for read-only purposes.
