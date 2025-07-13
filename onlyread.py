@@ -24,7 +24,7 @@ with DAG(
     def read_from_gcs_callable(**kwargs):
         ti = kwargs['ti']
         bucket_name = 'airflow-insumos'
-        source_blob_name = 'data/input_data.txt'
+        source_blob_name = 'data/input-data.txt'
         gcs_hook = GCSHook()
         
         # The download method can write to a file or return content
