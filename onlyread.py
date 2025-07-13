@@ -23,7 +23,7 @@ with DAG(
     # --- Tarea 1: Leer información desde GCS ---
     def read_from_gcs_callable(**kwargs):
         ti = kwargs['ti']
-        bucket_name = 'airflow-info'
+        bucket_name = 'airflow-insumos'
         source_blob_name = 'data/input_data.txt'
         gcs_hook = GCSHook()
         
