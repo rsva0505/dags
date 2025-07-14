@@ -50,14 +50,14 @@ with DAG(
     )
 
     # Tarea 4: Descargar el archivo de GCS a una ubicación local temporal para lectura
-    # Tarea 4: Descargar el archivo de GCS a una ubicación local temporal para lectura
     download_file_from_gcs = GCSToLocalFilesystemOperator(
         task_id="download_file_from_gcs",
-        bucket=GCS_BUCKET_NAME, # ¡Corregido!
-        object_name=TEST_FILE_NAME, # ¡Corregido!
-        dst=f"{LOCAL_TEST_FILE_PATH}_downloaded",
+        bucket=GCS_BUCKET_NAME,
+        object_name=TEST_FILE_NAME,
+        filename=f"{LOCAL_TEST_FILE_PATH}_downloaded", # <-- Nombre del argumento corregido
         gcp_conn_id="google_cloud_default",
     )
+
     # Tarea 5: Leer el contenido del archivo descargado (para verificar la lectura)
     read_downloaded_file_content = BashOperator(
         task_id="read_downloaded_file_content",
