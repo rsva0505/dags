@@ -32,11 +32,11 @@ with DAG(
 
     # Tarea 2: Subir el archivo local a GCS
     upload_file_to_gcs = LocalFilesystemToGCSOperator(
-        task_id="upload_file_to_gcs",
-        src=LOCAL_TEST_FILE_PATH,
-        dst=TEST_FILE_NAME,
-        bucket=GCS_BUCKET_NAME,
-        project_id=GCP_PROJECT_ID,
+      task_id="upload_file_to_gcs",
+      src=LOCAL_TEST_FILE_PATH,
+      dst=TEST_FILE_NAME,
+      bucket=GCS_BUCKET_NAME,
+    # project_id ya no es necesario aquí
     )
 
     # Tarea 3: Verificar que el archivo existe en GCS
