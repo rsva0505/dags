@@ -47,7 +47,7 @@ with DAG(
       mode="poke",
       poke_interval=5,
       timeout=60,
-)    )
+   )
 
     # Tarea 4: Descargar el archivo de GCS a una ubicación local temporal para lectura
     download_file_from_gcs = GCSToLocalFilesystemOperator(
