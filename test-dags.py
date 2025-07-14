@@ -7,8 +7,7 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFilesystemOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor # ¡Línea corregida!
 
-GCP_PROJECT_ID = "your-gcp-project-id"  # ¡REEMPLAZA ESTO!
-GCS_BUCKET_NAME = "your-gcs-test-bucket-12345"  # ¡REEMPLAZA ESTO CON UN NOMBRE ÚNICO!
+GCS_BUCKET_NAME = "airflow-insumos"  # ¡REEMPLAZA ESTO CON UN NOMBRE ÚNICO!
 TEST_FILE_NAME = "test_airflow_gcs_file.txt"
 LOCAL_TEST_FILE_PATH = f"/tmp/{TEST_FILE_NAME}"
 TEST_FILE_CONTENT = "Hello from Airflow to GCP!"
@@ -41,14 +40,14 @@ with DAG(
 
     # Tarea 3: Verificar que el archivo existe en GCS
     check_file_existence_in_gcs = GCSObjectExistenceSensor(
-        task_id="check_file_existence_in_gcs",
-        bucket=GCS_BUCKET_NAME,
-        object=TEST_FILE_NAME,
-        project_id=GCP_PROJECT_ID,
-        mode="poke",
-        poke_interval=5,
-        timeout=60,
-    )
+      task_id="check_file_existence_in_gcs",
+      bucket=GCS_BUCKET_NAME,
+      object=TEST_FILE_NAME,
+      # project_id ya no es necesario aquí
+      mode="poke",
+      poke_interval=5,
+      timeout=60,
+)    )
 
     # Tarea 4: Descargar el archivo de GCS a una ubicación local temporal para lectura
     download_file_from_gcs = GCSToLocalFilesystemOperator(
