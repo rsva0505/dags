@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime # Usamos datetime estándar
+from datetime import datetime
 from airflow.models.dag import DAG
 from airflow.operators.bash import BashOperator
-from airflow.providers.google.cloud.operators.gcs import (
-    GCSObjectExistenceSensor,
-)
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_local import GCSToLocalFilesystemOperator
+from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor # ¡Línea corregida!
 
 GCP_PROJECT_ID = "your-gcp-project-id"  # ¡REEMPLAZA ESTO!
 GCS_BUCKET_NAME = "your-gcs-test-bucket-12345"  # ¡REEMPLAZA ESTO CON UN NOMBRE ÚNICO!
