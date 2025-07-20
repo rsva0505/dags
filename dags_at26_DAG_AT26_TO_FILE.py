@@ -153,7 +153,7 @@ try:
         
         kwargs['ti'].log.info(f"Archivo generado y guardado en el PVC: {output_file_path}")
 
-    except Exception as e:
+except Exception as e:
         kwargs['ti'].log.error(f"Error durante la generacion del archivo: {str(e)}")
         import traceback
         kwargs['ti'].log.error("Traceback completo:\n" + traceback.format_exc())
