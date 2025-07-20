@@ -181,7 +181,7 @@ default_args = {
 	'start_date': days_ago(1)
 }
 
-dag = DAG(dag_id='AT26_TO_FILE', default_args=default_args, schedule_interval=None, catchup=False)
+dag = DAG(dag_id='AT26_TO_FILE_GCP', default_args=default_args, schedule_interval=None, catchup=False)
 
 
 AT26_ATSUDEBAN_TOFILE_task = PythonOperator(
