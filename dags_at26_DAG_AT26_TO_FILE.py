@@ -117,43 +117,40 @@ def AT26_ATSUDEBAN_TOFILE(**kwargs):
 	hook.run(sql_query_deftxt)
 
 def ATS_TH_AT26_TOTXT(**kwargs):
-    # Conexion a la bd at26
+    # The 'kwargs' variable is available here, inside the function.
+    
+    # Connection to the at26 database
     hook = PostgresHook(postgres_conn_id='at26')
-   
 
-    # Recuperar las variables definidas en las tareas previas
+    # Retrieve variables
     FileAT = Variable.get('FileAT_at26')
     FileCodSupervisado = Variable.get('FileCodSupervisado')
     FechaFile = Variable.get('FechaFile')
 
-    # Generar txt desde la base de datos
+    # Get records from the database
     kwargs['ti'].log.info("Obteniendo registros de la base de datos...")
     registros = hook.get_records("SELECT * FROM FILE_AT.ATS_TH_AT26;")
     kwargs['ti'].log.info(f"Se obtuvieron {len(registros)} registros.")
 
-    # Definir la ruta del archivo de salida en GCS
+    # Define the output path. This must be inside the function.
     output_directory = '/opt/airflow/insumos'
-    output_filename = f"dags_at26_DAG_AT26_TO_FILE/{FileAT}{FileCodSupervisado}{FechaFile}.txt" # Crea una carpeta con el mismo nombre del DAG para guardar el archivo
+    output_filename = f"dags_at26_DAG_AT26_TO_FILE/{FileAT}{FileCodSupervisado}{FechaFile}.txt"
     output_file_path = os.path.join(output_directory, output_filename)
-    
-    temp_dir = tempfile.mkdtemp() # Crea un directorio temporal
-    local_file_path = os.path.join(temp_dir, f"{FileAT}{FileCodSupervisado}{FechaFile}.txt") # Ruta del archivo temporal local
 
-try:
-        # Asegurarse de que el directorio de salida exista
+    try:
+        # The 'output_file_path' variable is now defined and can be used here.
         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
         
         kwargs['ti'].log.info(f"Escribiendo datos a archivo local: {output_file_path}")
-        # Escribir los registros en el archivo de texto en el PVC
         with open(output_file_path, 'w', encoding='utf-8') as f:
             for row in registros:
-                # Convertimos cada fila (tupla) a una cadena separada por tildes
                 linea = "~".join(str(valor) if valor is not None else "" for valor in row)
                 f.write(linea + "\n")
         
         kwargs['ti'].log.info(f"Archivo generado y guardado en el PVC: {output_file_path}")
 
-except Exception as e:
+    except Exception as e:
+        # The 'kwargs' variable is also available here, inside the function.
         kwargs['ti'].log.error(f"Error durante la generacion del archivo: {str(e)}")
         import traceback
         kwargs['ti'].log.error("Traceback completo:\n" + traceback.format_exc())
