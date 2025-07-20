@@ -119,7 +119,7 @@ def AT26_ATSUDEBAN_TOFILE(**kwargs):
 def ATS_TH_AT26_TOTXT(**kwargs):
     # Conexion a la bd at26
     hook = PostgresHook(postgres_conn_id='at26')
-    gcs_hook = GCSHook(gcp_conn_id='google_cloud_default') # Inicializar GCSHook
+   
 
     # Recuperar las variables definidas en las tareas previas
     FileAT = Variable.get('FileAT_at26')
@@ -132,47 +132,32 @@ def ATS_TH_AT26_TOTXT(**kwargs):
     kwargs['ti'].log.info(f"Se obtuvieron {len(registros)} registros.")
 
     # Definir la ruta del archivo de salida en GCS
-    gcs_bucket = 'airflow-info'
-    gcs_object_path = f"data/AT26/SALIDAS/{FileAT}{FileCodSupervisado}{FechaFile}.txt"
+    output_directory = '/opt/airflow/insumos'
+    output_filename = f"dags_at26_DAG_AT26_TO_FILE/{FileAT}{FileCodSupervisado}{FechaFile}.txt" # Crea una carpeta con el mismo nombre del DAG para guardar el archivo
+    output_file_path = os.path.join(output_directory, output_filename)
     
     temp_dir = tempfile.mkdtemp() # Crea un directorio temporal
     local_file_path = os.path.join(temp_dir, f"{FileAT}{FileCodSupervisado}{FechaFile}.txt") # Ruta del archivo temporal local
 
-    try:
-        kwargs['ti'].log.info(f"Escribiendo datos a archivo temporal local: {local_file_path}")
-        # Escribir los registros en el archivo de texto temporal local
-        with open(local_file_path, 'w', encoding='utf-8') as f:
+try:
+        # Asegurarse de que el directorio de salida exista
+        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+        
+        kwargs['ti'].log.info(f"Escribiendo datos a archivo local: {output_file_path}")
+        # Escribir los registros en el archivo de texto en el PVC
+        with open(output_file_path, 'w', encoding='utf-8') as f:
             for row in registros:
-                # Convertimos cada fila (tupla) a una cadena separada por tildes y aseguramos que los valores None se traten como cadenas vaci­as
+                # Convertimos cada fila (tupla) a una cadena separada por tildes
                 linea = "~".join(str(valor) if valor is not None else "" for valor in row)
                 f.write(linea + "\n")
         
-        kwargs['ti'].log.info(f"Archivo temporal local generado correctamente. Subiendo a GCS: gs://{gcs_bucket}/{gcs_object_path}")
-        
-        # Subir el archivo temporal local a GCS
-        gcs_hook.upload(
-            bucket_name=gcs_bucket,
-            object_name=gcs_object_path,
-            filename=local_file_path,
-            #mime_type='text/plain' # Opcional: especificar el tipo MIME
-        )
-        kwargs['ti'].log.info(f"Archivo generado y subido a GCS: gs://{gcs_bucket}/{gcs_object_path}")
+        kwargs['ti'].log.info(f"Archivo generado y guardado en el PVC: {output_file_path}")
 
     except Exception as e:
-        kwargs['ti'].log.error(f"Error durante la generacion o subida del archivo: {str(e)}")
+        kwargs['ti'].log.error(f"Error durante la generacion del archivo: {str(e)}")
         import traceback
         kwargs['ti'].log.error("Traceback completo:\n" + traceback.format_exc())
         raise
-
-    finally:
-        # Limpieza: Asegurarse de eliminar el archivo temporal y el directorio
-        if os.path.exists(local_file_path):
-            os.remove(local_file_path)
-            kwargs['ti'].log.info(f"Archivo temporal eliminado: {local_file_path}")
-        if os.path.exists(temp_dir):
-            os.rmdir(temp_dir)
-            kwargs['ti'].log.info(f"Directorio temporal eliminado: {temp_dir}")
-
 
 ###### DEFINICION DEL DAG ###### 
 
