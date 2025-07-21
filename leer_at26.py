@@ -18,7 +18,7 @@ with DAG(
 ) as dag:
     check_postgres_connection = PostgresOperator(
         task_id='check_postgres_connection',
-        postgres_conn_id='t26',  # ¡Actualizado a 't26'!
+        postgres_conn_id='at26',  # ¡Actualizado a 't26'!
         sql="SELECT 1;",
     )
 
