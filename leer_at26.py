@@ -24,7 +24,7 @@ with DAG(
 
     extract_and_load_fraud_data = PostgresToGCSOperator(
         task_id='extract_and_load_fraud_data',
-        postgres_conn_id='t26',  # ¡Actualizado a 't26'!
+        postgres_conn_id='at26',  # ¡Actualizado a 't26'!
         sql="SELECT NROFRAUDE, CAUSAFRAUDE, TIPOINSTRUMENTO, CANALFRAUDE, TIPOFRAUDE, TIPOFRANQUICIA FROM your_table_name;", # Reemplaza 'your_table_name' con el nombre real de tu tabla
         bucket='airflow-insumos',
         filename='data/fraud_data_{{ ds }}.csv',
