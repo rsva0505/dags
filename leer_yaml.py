@@ -13,7 +13,7 @@ default_args = {
 }
 
 # Nombre del bucket y archivo
-GCS_BUCKET_NAME = 'airflow/insumos'  # Reemplaza si tu bucket tiene una estructura diferente
+GCS_BUCKET_NAME = 'airflow-insumos'  # Reemplaza si tu bucket tiene una estructura diferente
 GCS_FILE_PATH = 'airflow_values-gcp.yaml'
 LOCAL_FILE_PATH = '/tmp/airflow_values-gcp.yaml' # Ruta temporal dentro del pod de Airflow
 
